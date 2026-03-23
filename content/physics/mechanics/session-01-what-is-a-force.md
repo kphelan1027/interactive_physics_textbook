@@ -7,7 +7,7 @@ tags: [physics, forces, newton, vectors, motion, classical-mechanics]
 visual: /assets/2026-03-23-physics-forces-session-1.png
 visual_caption: "Force is a vector — magnitude AND direction. Opposite forces cancel; net force determines motion."
 reuse: public
-open_question_answered: false
+open_question_answered: true
 ---
 
 # Physics — Session 1: What is a force?
@@ -89,7 +89,7 @@ This is why:
 >
 > *(Hint: think about what the scale is actually measuring — it's not your mass.)*
 
-**Kevin's answer:** _(not yet provided)_
+**Kevin's answer:** Scale reads higher when lift accelerates upward (the scale must push your feet up harder than gravity pulls you down, so your feet press down on it more). Same reading at constant speed (no acceleration, net force = 0). Lower reading when decelerating to a stop. Key insight reached: a scale measures the contact/compression force between you and it — not mass directly. Also understood that the elevator's upward force acts on the bottom of the scale, not the top, so it doesn't cancel the downward force from your feet — it causes the increased squeeze. Connected to Newton's Third Law: forces always come in equal and opposite pairs across the contact point. ✅ (2026-03-23)
 
 ---
 
