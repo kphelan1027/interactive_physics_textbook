@@ -8,6 +8,7 @@ const TRACK_META: Record<string, { name: string; accent_hex: string; sort_order:
   accounting: { name: 'Accounting & Finance', accent_hex: '#15803D', sort_order: 2 },
   llm: { name: 'LLMs & AI', accent_hex: '#7C3AED', sort_order: 3 },
   physics: { name: 'Physics', accent_hex: '#B45309', sort_order: 4 },
+  jtbd: { name: 'JTBD & Bobby Moesta', accent_hex: '#DC2626', sort_order: 5 },
 }
 
 const CHAPTER_META: Record<string, { name: string; track: string; sort_order: number }> = {
@@ -15,6 +16,7 @@ const CHAPTER_META: Record<string, { name: string; track: string; sort_order: nu
   'revenue-recognition': { name: 'Revenue Recognition', track: 'accounting', sort_order: 1 },
   foundations: { name: 'Foundations', track: 'llm', sort_order: 1 },
   mechanics: { name: 'Mechanics', track: 'physics', sort_order: 1 },
+  'jobs-to-be-done': { name: 'Jobs to Be Done', track: 'jtbd', sort_order: 1 },
 }
 
 // Legacy track → chapter mapping
@@ -23,6 +25,7 @@ const TRACK_CHAPTER_MAP: Record<string, string> = {
   accounting: 'revenue-recognition',
   llm: 'foundations',
   physics: 'mechanics',
+  jtbd: 'jobs-to-be-done',
 }
 
 function slugify(text: string): string {
@@ -75,7 +78,7 @@ function scanFiles(dir: string, baseDir: string): string[] {
     const fullPath = path.join(dir, entry.name)
     if (entry.isDirectory()) {
       results.push(...scanFiles(fullPath, baseDir))
-    } else if (entry.name.endsWith('.md')) {
+    } else if (entry.name.endsWith('.md') && !entry.name.startsWith('_')) {
       results.push(path.relative(baseDir, fullPath))
     }
   }

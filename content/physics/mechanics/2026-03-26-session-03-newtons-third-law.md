@@ -102,7 +102,7 @@ Now connect this back to Session 2 (F=ma): both the rocket and the exhaust exper
 
 ## Visual
 
-![[2026-03-26-newtons-third-law.png]]
+![[2026-03-26-09-31-08-newtons-third-law.png]]
 
 *Three panels: person pushing wall (equal opposing forces), rocket with exhaust (force pairs), two skaters pushing apart (simultaneous reaction).*
 
