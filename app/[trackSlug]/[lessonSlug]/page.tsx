@@ -51,11 +51,17 @@ export default function LessonPage() {
   const [streaming, setStreaming] = useState(false)
   const [streamingText, setStreamingText] = useState('')
   const [markedRead, setMarkedRead] = useState(false)
+  const [activeTab, setActiveTab] = useState<'lesson' | 'qa'>('lesson')
 
   const contentRef = useRef<HTMLDivElement>(null)
   const qaBottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const scrollReportedRef = useRef(false)
+
+  // Reset to lesson tab when navigating to a new lesson
+  useEffect(() => {
+    setActiveTab('lesson')
+  }, [lessonSlug])
 
   // Load lesson data
   useEffect(() => {
@@ -179,22 +185,24 @@ export default function LessonPage() {
     <div className="min-h-screen bg-[#F7F4EF] flex flex-col">
       {/* Breadcrumb bar */}
       <div className="border-b border-[#E2DDD6] bg-white shrink-0">
-        <div className="px-12 py-3">
-          <nav className="flex items-center gap-2 font-sans text-sm text-[#6B6560]">
-            <Link href="/" className="hover:text-[#1C1917] transition-colors">Library</Link>
-            <span>›</span>
-            <Link href={`/${lesson.track_slug}`} className="hover:text-[#1C1917] transition-colors">
+        <div className="px-4 md:px-12 py-3">
+          <nav className="flex items-center gap-2 font-sans text-sm text-[#6B6560] min-w-0">
+            {/* Library and chapter segments hidden on mobile */}
+            <Link href="/" className="hidden md:inline shrink-0 hover:text-[#1C1917] transition-colors">Library</Link>
+            <span className="hidden md:inline shrink-0">›</span>
+            <Link href={`/${lesson.track_slug}`} className="shrink-0 hover:text-[#1C1917] transition-colors">
               {lesson.track_name}
             </Link>
-            <span>›</span>
-            <Link href={`/${lesson.track_slug}`} className="hover:text-[#1C1917] transition-colors">
+            <span className="shrink-0">›</span>
+            {/* Chapter has no dedicated route yet — links to track page */}
+            <Link href={`/${lesson.track_slug}`} className="hidden md:inline shrink-0 hover:text-[#1C1917] transition-colors">
               {lesson.chapter_name}
             </Link>
-            <span>›</span>
-            <span className="text-[#1C1917]">{lesson.title}</span>
+            <span className="hidden md:inline shrink-0">›</span>
+            <span className="text-[#1C1917] truncate min-w-0">{lesson.title}</span>
             {markedRead && (
               <span
-                className="ml-2 w-2 h-2 rounded-full inline-block"
+                className="ml-2 w-2 h-2 rounded-full inline-block shrink-0"
                 style={{ backgroundColor: lesson.accent_hex }}
                 title="Read"
               />
@@ -203,14 +211,50 @@ export default function LessonPage() {
         </div>
       </div>
 
-      {/* Two-column layout */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Content pane — 65% */}
+      {/* Mobile tab bar — hidden at md+ */}
+      <div role="tablist" className="md:hidden flex border-b border-[#E2DDD6] bg-white shrink-0">
+        <button
+          role="tab"
+          aria-selected={activeTab === 'lesson'}
+          aria-controls="lesson-panel"
+          id="lesson-tab"
+          onClick={() => setActiveTab('lesson')}
+          className={`flex-1 py-2.5 font-sans text-sm font-medium transition-colors ${
+            activeTab === 'lesson'
+              ? 'text-[#2563EB] border-b-2 border-[#2563EB]'
+              : 'text-[#6B6560]'
+          }`}
+        >
+          Lesson
+        </button>
+        <button
+          role="tab"
+          aria-selected={activeTab === 'qa'}
+          aria-controls="qa-panel"
+          id="qa-tab"
+          onClick={() => setActiveTab('qa')}
+          className={`flex-1 py-2.5 font-sans text-sm font-medium transition-colors ${
+            activeTab === 'qa'
+              ? 'text-[#2563EB] border-b-2 border-[#2563EB]'
+              : 'text-[#6B6560]'
+          }`}
+        >
+          Q&A
+        </button>
+      </div>
+
+      {/* Two-column layout — stacks vertically on mobile */}
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+        {/* Content pane — full width on mobile, 65% on desktop */}
         <div
+          id="lesson-panel"
+          role="tabpanel"
+          aria-labelledby="lesson-tab"
           ref={contentRef}
           onScroll={handleContentScroll}
-          className="w-[65%] overflow-y-auto"
-          style={{ paddingTop: '48px', paddingLeft: '64px', paddingRight: '64px', paddingBottom: '64px' }}
+          className={`w-full md:w-[65%] min-h-0 overflow-y-auto px-4 pt-6 pb-16 md:pt-12 md:px-16 ${
+            activeTab === 'qa' ? 'hidden md:block' : ''
+          }`}
         >
           <div className="max-w-[720px]">
             <h1 className="font-sans text-2xl font-semibold text-[#1C1917] mb-8 leading-tight">
@@ -274,10 +318,14 @@ export default function LessonPage() {
           </div>
         </div>
 
-        {/* Q&A pane — 35% */}
+        {/* Q&A pane — full width on mobile, 35% on desktop */}
         <div
-          className="w-[35%] border-l border-[#E2DDD6] bg-white flex flex-col"
-          style={{ borderLeftWidth: '1px' }}
+          id="qa-panel"
+          role="tabpanel"
+          aria-labelledby="qa-tab"
+          className={`w-full md:w-[35%] min-h-0 border-t md:border-t-0 md:border-l border-[#E2DDD6] bg-white flex flex-col ${
+            activeTab === 'lesson' ? 'hidden md:flex' : ''
+          }`}
         >
           {/* Q&A header with lesson-level depth controls */}
           <div className="px-5 py-4 border-b border-[#E2DDD6] shrink-0">
