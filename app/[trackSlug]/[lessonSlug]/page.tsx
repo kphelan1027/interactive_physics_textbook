@@ -58,6 +58,11 @@ export default function LessonPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const scrollReportedRef = useRef(false)
 
+  // Reset to lesson tab when navigating to a new lesson
+  useEffect(() => {
+    setActiveTab('lesson')
+  }, [lessonSlug])
+
   // Load lesson data
   useEffect(() => {
     fetch(`/api/lessons/${lessonSlug}`)
@@ -181,23 +186,20 @@ export default function LessonPage() {
       {/* Breadcrumb bar */}
       <div className="border-b border-[#E2DDD6] bg-white shrink-0">
         <div className="px-4 md:px-12 py-3">
-          <nav className="flex items-center gap-2 font-sans text-sm text-[#6B6560]">
+          <nav className="flex items-center gap-2 font-sans text-sm text-[#6B6560] min-w-0">
             {/* Library and chapter segments hidden on mobile */}
-            <span className="hidden md:contents">
-              <Link href="/" className="hover:text-[#1C1917] transition-colors">Library</Link>
-              <span>›</span>
-            </span>
-            <Link href={`/${lesson.track_slug}`} className="hover:text-[#1C1917] transition-colors">
+            <Link href="/" className="hidden md:inline shrink-0 hover:text-[#1C1917] transition-colors">Library</Link>
+            <span className="hidden md:inline shrink-0">›</span>
+            <Link href={`/${lesson.track_slug}`} className="shrink-0 hover:text-[#1C1917] transition-colors">
               {lesson.track_name}
             </Link>
-            <span>›</span>
-            <span className="hidden md:contents">
-              <Link href={`/${lesson.track_slug}`} className="hover:text-[#1C1917] transition-colors">
-                {lesson.chapter_name}
-              </Link>
-              <span>›</span>
-            </span>
-            <span className="text-[#1C1917] truncate">{lesson.title}</span>
+            <span className="shrink-0">›</span>
+            {/* Chapter has no dedicated route yet — links to track page */}
+            <Link href={`/${lesson.track_slug}`} className="hidden md:inline shrink-0 hover:text-[#1C1917] transition-colors">
+              {lesson.chapter_name}
+            </Link>
+            <span className="hidden md:inline shrink-0">›</span>
+            <span className="text-[#1C1917] truncate min-w-0">{lesson.title}</span>
             {markedRead && (
               <span
                 className="ml-2 w-2 h-2 rounded-full inline-block shrink-0"
@@ -210,8 +212,12 @@ export default function LessonPage() {
       </div>
 
       {/* Mobile tab bar — hidden at md+ */}
-      <div className="md:hidden flex border-b border-[#E2DDD6] bg-white shrink-0">
+      <div role="tablist" className="md:hidden flex border-b border-[#E2DDD6] bg-white shrink-0">
         <button
+          role="tab"
+          aria-selected={activeTab === 'lesson'}
+          aria-controls="lesson-panel"
+          id="lesson-tab"
           onClick={() => setActiveTab('lesson')}
           className={`flex-1 py-2.5 font-sans text-sm font-medium transition-colors ${
             activeTab === 'lesson'
@@ -222,6 +228,10 @@ export default function LessonPage() {
           Lesson
         </button>
         <button
+          role="tab"
+          aria-selected={activeTab === 'qa'}
+          aria-controls="qa-panel"
+          id="qa-tab"
           onClick={() => setActiveTab('qa')}
           className={`flex-1 py-2.5 font-sans text-sm font-medium transition-colors ${
             activeTab === 'qa'
@@ -229,7 +239,7 @@ export default function LessonPage() {
               : 'text-[#6B6560]'
           }`}
         >
-          Q&amp;A
+          Q&A
         </button>
       </div>
 
@@ -237,10 +247,13 @@ export default function LessonPage() {
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
         {/* Content pane — full width on mobile, 65% on desktop */}
         <div
+          id="lesson-panel"
+          role="tabpanel"
+          aria-labelledby="lesson-tab"
           ref={contentRef}
           onScroll={handleContentScroll}
-          className={`w-full md:w-[65%] overflow-y-auto px-4 pt-6 pb-16 md:pt-12 md:px-16 ${
-            activeTab !== 'lesson' ? 'hidden md:block' : ''
+          className={`w-full md:w-[65%] min-h-0 overflow-y-auto px-4 pt-6 pb-16 md:pt-12 md:px-16 ${
+            activeTab === 'qa' ? 'hidden md:block' : ''
           }`}
         >
           <div className="max-w-[720px]">
@@ -307,8 +320,11 @@ export default function LessonPage() {
 
         {/* Q&A pane — full width on mobile, 35% on desktop */}
         <div
-          className={`w-full md:w-[35%] border-t md:border-t-0 md:border-l border-[#E2DDD6] bg-white flex flex-col ${
-            activeTab !== 'qa' ? 'hidden md:flex' : ''
+          id="qa-panel"
+          role="tabpanel"
+          aria-labelledby="qa-tab"
+          className={`w-full md:w-[35%] min-h-0 border-t md:border-t-0 md:border-l border-[#E2DDD6] bg-white flex flex-col ${
+            activeTab === 'lesson' ? 'hidden md:flex' : ''
           }`}
         >
           {/* Q&A header with lesson-level depth controls */}
