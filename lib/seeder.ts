@@ -9,14 +9,21 @@ const TRACK_META: Record<string, { name: string; accent_hex: string; sort_order:
   llm: { name: 'LLMs & AI', accent_hex: '#7C3AED', sort_order: 3 },
   physics: { name: 'Physics', accent_hex: '#B45309', sort_order: 4 },
   jtbd: { name: 'JTBD & Bobby Moesta', accent_hex: '#DC2626', sort_order: 5 },
+  openclaw: { name: 'OpenClaw Technology', accent_hex: '#0369A1', sort_order: 6 },
+  'org-design': { name: 'Org Design & The Future of Companies', accent_hex: '#9333EA', sort_order: 7 },
+  'electrical-engineering': { name: 'Electrical Engineering Foundations', accent_hex: '#CA8A04', sort_order: 8 },
 }
 
 const CHAPTER_META: Record<string, { name: string; track: string; sort_order: number }> = {
   'databases-and-sql': { name: 'Databases & SQL', track: 'technical', sort_order: 1 },
+  'command-line-tools': { name: 'Command Line & Tools', track: 'technical', sort_order: 2 },
   'revenue-recognition': { name: 'Revenue Recognition', track: 'accounting', sort_order: 1 },
   foundations: { name: 'Foundations', track: 'llm', sort_order: 1 },
   mechanics: { name: 'Mechanics', track: 'physics', sort_order: 1 },
   'jobs-to-be-done': { name: 'Jobs to Be Done', track: 'jtbd', sort_order: 1 },
+  'openclaw-fundamentals': { name: 'Fundamentals', track: 'openclaw', sort_order: 1 },
+  'org-design-fundamentals': { name: 'Fundamentals', track: 'org-design', sort_order: 1 },
+  'electrical-foundations': { name: 'Electrical Foundations', track: 'electrical-engineering', sort_order: 1 },
 }
 
 // Legacy track → chapter mapping
@@ -26,6 +33,9 @@ const TRACK_CHAPTER_MAP: Record<string, string> = {
   llm: 'foundations',
   physics: 'mechanics',
   jtbd: 'jobs-to-be-done',
+  openclaw: 'openclaw-fundamentals',
+  'org-design': 'org-design-fundamentals',
+  'electrical-engineering': 'electrical-foundations',
 }
 
 function slugify(text: string): string {
